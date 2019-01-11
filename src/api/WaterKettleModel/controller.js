@@ -1,47 +1,43 @@
 import { success, notFound } from '../../services/response/'
 import { WaterKettleModel } from '.'
 
+
 var mqtt = require('mqtt')
 var client = mqtt.connect({
   host: 'm21.cloudmqtt.com',
   port: 15512,
   username: 'qpumvfcg',
   password: 'RojH5T47_STM'
-})
+});
 
-client.on('connect', function () {
-  client.subscribe('WaterKettleModels', function (err) {
-    console.log(err);
-    if (!err) {
-      console.log('COONTAAACFTTTTT')
-    }
-  })
-})
 
-client.subscribe('WaterKettleModels', function (err) {
-  if (!err) {
-    console.log('COONTAAACFTTTTT')
-  }
-})
+
+
+// = onMessageArrived;
 
 //Test
 client.on('connect', function() { // When connected
   console.log('connected');
   // subscribe to a topic
-  client.subscribe('WaterKettleModels', function() {
+  client.subscribe('WaterKettleModels', function(err) {
     // when a message arrives, do something with it
-    client.on('message', function(topic, message, packet) {
-      console.log("Received '" + message  + "' on '" + topic + "'" + JSON.stringify(packet) );
-    });
+    console.log("Subscribing");
   });
-
+  client.subscribe('WaterKettleModels');
+});
+client.on('message', function (topic, message) {
+  console.log(JSON.parse(message.toString()));
+  console.log(JSON.parse(message.toString())["temperature"]);
+  var data = { temperature: JSON.parse(message.toString())["temperature"], weight:JSON.parse(message.toString())["weight"]};
+  WaterKettleModel.create(data).catch((err)=>console.log(err))
 
 });
 
 
 
-client.onMessageArrived = onMessageArrived;
+
 function onMessageArrived(message) {
+  console.log("efwFEWFWEfwefwe");
   console.log("onMessageArrived:"+message.payloadString);
 }
 
