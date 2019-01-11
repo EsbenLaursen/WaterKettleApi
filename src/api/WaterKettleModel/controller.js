@@ -26,7 +26,6 @@ client.on('connect', function() { // When connected
   client.subscribe('WaterKettleModels');
 });
 client.on('message', function (topic, message) {
-  console.log(JSON.parse(message.toString()));
   console.log(JSON.parse(message.toString())["temperature"]);
   var data = { temperature: JSON.parse(message.toString())["temperature"], weight:JSON.parse(message.toString())["weight"]};
   WaterKettleModel.create(data).catch((err)=>console.log(err))
